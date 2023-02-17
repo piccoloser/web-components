@@ -44,6 +44,7 @@ class TabMenu extends HTMLElement {
                     background-color: ${this.inactiveBackgroundColor};
                     color: #000;
                     cursor: pointer;
+                    user-select: none;
                 }
 
                 a[id^="tab-"]:hover {
@@ -57,7 +58,12 @@ class TabMenu extends HTMLElement {
                 #tabs {
                     display: flex;
                     gap: .25rem;
+                    padding: 0 .25rem;
                     border-bottom: solid 1px ${this.backgroundColor};
+                }
+
+                #tabs.minimized {
+                    border-bottom: solid 1px ${this.inactiveBackgroundColor};
                 }
 
                 #wrapper {
@@ -75,11 +81,12 @@ class TabMenu extends HTMLElement {
                 }
 
                 #wrapper>div:not(:first-child).open {
-                    display: block;
+                    display: block
                 }
 
-                #wrapper>div:not(:first-child) {
-                    display: none !important;
+                #wrapper .disabled {
+                    opacity: .25;
+                    cursor: not-allowed;
                 }
             `,
         });
@@ -88,20 +95,26 @@ class TabMenu extends HTMLElement {
         this.divs = [];
 
         const wrapper = addElement("div", { id: "wrapper" });
-        const header = addElement("header", { id: "tabs" });
-
-        wrapper.appendChild(header);
+        this.header = addElement("header", { id: "tabs" });
+        wrapper.appendChild(this.header);
 
         Object.entries(this.children).forEach(([n, div]) => {
             let tab = addElement("a", {
                 id: `tab-${n}`,
-                innerHTML: `${this.hasAttribute("numbered") ? `${n}: ` : ""
-                    }${div.getAttribute("name")}`,
-                onclick: () => div.hasAttribute("disabled") ? {} : this.openTab(n),
+
+                innerHTML: `${this.hasAttribute("numbered") ?
+                    `${n}: ` : ""}${div.getAttribute("name")}`,
+
+                onclick: () => div.hasAttribute("disabled") ?
+                    {} : div.classList.contains("open") ?
+                        this.minimize() : this.openTab(n),
             });
 
-            header.appendChild(tab);
+            if (div.hasAttribute("disabled"))
+                tab.classList.add("disabled");
+            this.header.appendChild(tab);
             wrapper.appendChild(div);
+
             this.divs.push([tab, div]);
         });
 
@@ -121,7 +134,16 @@ class TabMenu extends HTMLElement {
         return index;
     }
 
+    minimize() {
+        this.header.classList.add("minimized");
+        this.divs.forEach(([tab, div]) => {
+            tab.classList.remove("open");
+            div.classList.remove("open");
+        });
+    }
+
     openTab(index) {
+        this.header.classList.remove("minimized");
         this.divs.forEach(([tab, div]) => {
             if (div == this.divs[index][1]) {
                 tab.classList.add("open");
