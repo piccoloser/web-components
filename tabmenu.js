@@ -1,4 +1,4 @@
-function addElement(tagName, properties) {
+function addElement(tagName, properties = {}) {
     return Object.assign(document.createElement(tagName), properties);
 }
 
@@ -13,25 +13,22 @@ class TabMenu extends HTMLElement {
 
         // Default background = rgba(200, 200, 200, 1)
         let bgColorParts = [];
-        if (!this.style.backgroundColor) {
-            for (let i = 0; i < 3; i++)
-                bgColorParts.push(200);
-        }
+        if (!this.style.backgroundColor)
+            bgColorParts.push(200, 200, 200);
 
-        // Parse manual background color.
-        else {
+        // Parse user-defined background color.
+        else
             this.style.backgroundColor.split(", ").forEach(value => {
-                bgColorParts.push(parseFloat(value.replace("rgb(", "").replace("rgba(", "")));
+                bgColorParts.push(parseFloat(value.replace(/.+\(/g, "")));
             })
-        }
 
-        // Add alpha value if not already set.
+        // Add default alpha value if not already set.
         if (bgColorParts.length == 3)
             bgColorParts.push(1);
 
         this.backgroundColor = `rgba(${bgColorParts.join(", ")})`;
 
-        // Get alpha value and decrease it for inactive tab color.
+        // Decrease alpha value by .2 (minimum of 0) for inactive tabs.
         let alpha = bgColorParts.pop();
         this.inactiveBackgroundColor = `rgba(${bgColorParts.join(", ")}, ${Math.max(0, alpha - .2)})`;
 
@@ -112,6 +109,7 @@ class TabMenu extends HTMLElement {
 
             if (div.hasAttribute("disabled"))
                 tab.classList.add("disabled");
+
             this.header.appendChild(tab);
             wrapper.appendChild(div);
 
