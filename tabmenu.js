@@ -13,6 +13,7 @@ class TabMenu extends HTMLElement {
         this.divs = [];
 
         [this.backgroundColor, this.inactiveBackgroundColor] = this.#parseBackgroundColor();
+        this.color = this.style.color;
 
         this.wrapper.appendChild(this.header);
     }
@@ -25,7 +26,7 @@ class TabMenu extends HTMLElement {
                     padding: .25rem .5rem;
                     border-radius: 3px 3px 0 0;
                     background-color: ${this.inactiveBackgroundColor};
-                    color: #000;
+                    color: ${this.color};
                     cursor: pointer;
                     user-select: none;
                 }
@@ -43,6 +44,7 @@ class TabMenu extends HTMLElement {
                     gap: .25rem;
                     padding: 0 .25rem;
                     border-bottom: solid 1px ${this.backgroundColor};
+                    color: ${this.color};
                 }
 
                 #tabs.minimized {
@@ -60,7 +62,7 @@ class TabMenu extends HTMLElement {
                     padding: 1rem;
                     box-sizing: border-box;
                     background-color: ${this.backgroundColor};
-                    color: #000;
+                    color: ${this.color};
                 }
 
                 #wrapper>div:not(:first-child).open {

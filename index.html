@@ -12,26 +12,29 @@
         }
 
         html {
-            background-color: #333;
+            background-color: #0d1117;
             color: #eee;
         }
     </style>
 </head>
 
 <body>
-    <tab-menu style="background: #0cf;">
+    <tab-menu style="background: #0969DA; color:#fff;" open="Buttons" numbered>
         <div name="Lorem Ipsum">
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi temporibus, cum distinctio aperiam
-                voluptates omnis recusandae velit, rem rerum earum ab natus totam a molestiae suscipit qui eum facilis
-                obcaecati.</p>
+            <p>This is some text.</p>
         </div>
         <div name="Buttons">
             <button>Button 1</button><button>Button 2</button><button>Button 3</button>
         </div>
-        <div name="Picture">
+        <div name="Picture" disabled>
             <img src="https://images.pexels.com/photos/2653362/pexels-photo-2653362.jpeg" width="100%"
-                alt="Code Stock Photo">
+                alt="A computer screen displaying CSS code.">
         </div>
+    </tab-menu>
+
+    <tab-menu closed>
+        <div name="Minimized"></div>
+        <div name="Same Here"></div>
     </tab-menu>
     <script src="./tabmenu.js"></script>
 </body>
