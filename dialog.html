@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tab Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            background-color: #0d1117;
+            color: #fff;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <modal-dialog id="modal"></modal-dialog>
+    <button onclick="displayTestDialog()">Click me!</button>
+
+    <tab-menu>
+        <div name="Tab 1">Test 1</div>
+        <div name="Tab 2">Test 2</div>
+        <div name="Tab 3">Test 3</div>
+    </tab-menu>
+
+    <script type="module" src="./minified/minified.js"></script>
+    <script>
+        function displayTestDialog() {
+            document.getElementById("modal").display(
+                "Required",
+                "<button id='close'>Click to close</button>",
+                true
+            );
+        }
+    </script>
+</body>
+
+</html>

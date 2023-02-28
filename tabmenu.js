@@ -1,6 +1,4 @@
-function addElement(tagName, properties = {}) {
-    return Object.assign(document.createElement(tagName), properties);
-}
+import { addElement } from "./helpers.js";
 
 class TabMenu extends HTMLElement {
     constructor() {
