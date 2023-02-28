@@ -23,13 +23,20 @@
     <modal-dialog id="modal"></modal-dialog>
     <button onclick="displayTestDialog()">Click me!</button>
 
-    <tab-menu>
-        <div name="Tab 1">Test 1</div>
-        <div name="Tab 2">Test 2</div>
-        <div name="Tab 3">Test 3</div>
+    <tab-menu style="background: #0ac;" open="Buttons">
+        <div name="Lorem Ipsum">
+            <p>This is some text.</p>
+        </div>
+        <div name="Buttons">
+            <button>Button 1</button><button>Button 2</button><button>Button 3</button>
+        </div>
+        <div name="Picture" disabled>
+            <img src="https://images.pexels.com/photos/2653362/pexels-photo-2653362.jpeg" width="100%"
+                alt="A computer screen displaying CSS code.">
+        </div>
     </tab-menu>
 
-    <script type="module" src="./minified/minified.js"></script>
+    <script type="module" src="./minified/main.js"></script>
     <script>
         function displayTestDialog() {
             document.getElementById("modal").display(
