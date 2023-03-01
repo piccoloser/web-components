@@ -21,7 +21,8 @@
 
 <body>
     <modal-dialog id="modal"></modal-dialog>
-    <button onclick="displayTestDialog()">Click me!</button>
+    <button onclick="displayTestDialog(false)">Standard Modal</button>
+    <button onclick="displayTestDialog(true)">Required Modal</button>
 
     <tab-menu style="background: #0ac;" open="Buttons">
         <div name="Lorem Ipsum">
@@ -36,14 +37,27 @@
         </div>
     </tab-menu>
 
-    <script type="module" src="./minified/main.js"></script>
+    <script type="module" src="./dialog.js"></script>
+    <script type="module" src="./tabmenu.js"></script>
     <script>
-        function displayTestDialog() {
-            document.getElementById("modal").display(
-                "Required",
-                "<button id='close'>Click to close</button>",
-                true
-            );
+        function displayTestDialog(required) {
+            let modal = document.getElementById("modal");
+
+            switch (required) {
+                case true:
+                    modal.display(
+                        "Required",
+                        "<p>You can only close this dialog by clicking <button id='close'>here!</button></p>",
+                        true
+                    );
+                    break;
+
+                default:
+                    modal.display(
+                        "Not Required",
+                        "<p>This dialog can be dismissed by clicking anywhere outside it or the 'X' button!</p>",
+                    )
+            }
         }
     </script>
 </body>

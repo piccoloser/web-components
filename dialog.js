@@ -101,7 +101,7 @@ class ModalDialog extends HTMLElement {
                     top: 0; left: 0;
                     z-index: 2;
 
-                    display: flex;
+                    display: none;
                     align-items: center;
                     justify-content: center;
 
@@ -112,7 +112,6 @@ class ModalDialog extends HTMLElement {
         });
 
         this.shadowRoot.append(style, this.wrapper);
-        this.display("Title", "This is the body of my message.");
     }
 
     close() {
@@ -124,7 +123,7 @@ class ModalDialog extends HTMLElement {
         if (this.wrapper.querySelector("#dialog-box"))
             this.close();
 
-        this.wrapper.style.display = "";
+        this.wrapper.style.display = "flex";
 
         let btnClose;
         if (!required)
