@@ -28,8 +28,6 @@ jobs:
 
     - name: Create minified file
       run: |
-        mkdir -p minified
-        mv minified/main.js minified
         git add minified/main.js
         git config --global user.email "actions@github.com"
         git config --global user.name "GitHub Actions"
