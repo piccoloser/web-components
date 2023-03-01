@@ -2,8 +2,12 @@ name: Minify JavaScript
 
 on:
   push:
+    branches: [main]
     paths:
       - '**.js'
+
+  pull_request:
+    branches: [main]
 
   workflow_dispatch:
 
