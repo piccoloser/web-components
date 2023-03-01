@@ -5,6 +5,8 @@ on:
     paths:
       - '**.js'
 
+  workflow_dispatch:
+
 jobs:
   minify:
     runs-on: ubuntu-latest
