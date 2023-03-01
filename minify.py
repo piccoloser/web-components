@@ -33,7 +33,7 @@ def main():
     response = re.sub("\n", "", minify_lines(lines).text)
 
     # Write output to a new JavaScript file.
-    output = Path("./minified/min-test.js")
+    output = Path("./minified/main.js")
     output.write_text(response)
     output.touch()
 
