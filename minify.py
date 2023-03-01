@@ -34,6 +34,9 @@ def main():
 
     # Write output to a new JavaScript file.
     output = Path("./minified/main.js")
+
+    # Ensure that the minified directory exists, then write the file.
+    output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(response)
     output.touch()
 

@@ -1,0 +1,36 @@
+name: Minify JavaScript
+
+on:
+  push:
+    paths:
+      - '**.js'
+
+jobs:
+  minify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install requests library
+      run: python -m pip install requests
+
+    - name: Run minify script
+      run: python minify.py
+
+    - name: Create minified file
+      run: |
+        mkdir -p minified
+        mv minified/main.js minified
+        git add minified/main.js
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
+        git commit -m "Minify main.js" || true
+        git push
+      working-directory: ${{ github.workspace }}
