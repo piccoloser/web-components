@@ -16,15 +16,22 @@
             color: #fff;
             font-family: sans-serif;
         }
+
+        p {
+            max-width: 48ch;
+            margin: 1rem;
+        }
     </style>
 </head>
 
 <body>
+    <nm-dialog id="non-modal"></nm-dialog>
     <modal-dialog id="modal"></modal-dialog>
-    <button onclick="displayTestDialog(false)">Standard Modal</button>
-    <button onclick="displayTestDialog(true)">Required Modal</button>
+    <button onclick="displayTestModal(false)">Standard Modal</button>
+    <button onclick="displayTestModal(true)">Required Modal</button>
+    <button onclick="displayTestNm()">Non-Modal</button>
 
-    <tab-menu style="background: #0ac;" open="Buttons">
+    <tab-menu open="Buttons">
         <div name="Lorem Ipsum">
             <p>This is some text.</p>
         </div>
@@ -37,10 +44,29 @@
         </div>
     </tab-menu>
 
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
+        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
+        expedita laudantium.</p>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
+        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
+        expedita laudantium.</p>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
+        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
+        expedita laudantium.</p>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
+        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
+        expedita laudantium.</p>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
+        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
+        expedita laudantium.</p>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
+        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
+        expedita laudantium.</p>
+
     <script type="module" src="./dialog.js"></script>
     <script type="module" src="./tabmenu.js"></script>
     <script>
-        function displayTestDialog(required) {
+        function displayTestModal(required) {
             let modal = document.getElementById("modal");
 
             switch (required) {
@@ -58,6 +84,14 @@
                         "<p>This dialog can be dismissed by clicking anywhere outside it or the 'X' button!</p>",
                     )
             }
+        }
+
+        function displayTestNm() {
+            let nm = document.getElementById("non-modal");
+            nm.display(
+                "This dialog can be closed by clicking the 'X' button, but it\
+                will eventually go away on its own.", 5
+            )
         }
     </script>
 </body>
