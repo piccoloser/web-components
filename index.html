@@ -4,28 +4,44 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Components Test</title>
+    <style>
+        html {
+            background-color: #000;
+            font-family: arial;
+        }
+    </style>
 </head>
 
 <body>
-    <modal-dialog id="modal"></modal-dialog>
+    <modal-dialog id="modal">
+        <h2 data-name="title"></h2>
+        <div data-name="body"></div>
+        <p data-name="hide">Hide this dialog.</p>
+    </modal-dialog>
 
-    <template id="modal-1">
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto dolorum, optio ratione fugit voluptas
-            autem iste iusto corporis totam, facere quae! Tempora veniam laboriosam ab minima voluptates ipsam totam
-            placeat.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto dolorum, optio ratione fugit voluptas
-            autem iste iusto corporis totam, facere quae! Tempora veniam laboriosam ab minima voluptates ipsam totam
-            placeat.</p>
-
-        <button class="close">Test</button>
-    </template>
-
-    <template id="modal-2">
-        <h2>This is another dialog.</h2>
-        <button class="close">Test</button>
-    </template>
+    <button onclick="displayDialog()">Display Dialog</button>
+    <button onclick="showDialog()">Show Dialog</button>
+    <button onclick="closeDialog()">Close Dialog</button>
 
     <script type="module" src="./dialog.js"></script>
+    <script>
+        function displayDialog() {
+            document.getElementById("modal").display({
+                "title": "Test",
+                "body": "This is a test!",
+            });
+        }
+
+        function showDialog() {
+            document.getElementById("modal").show();
+        }
+
+        function closeDialog() {
+            document.getElementById("modal").close();
+        }
+
+        window.onload = () => displayDialog();
+    </script>
 </body>
 
 </html>
