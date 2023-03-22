@@ -5,13 +5,13 @@ class ModalDialog extends HTMLElement {
         super();
         this.attachShadow({ mode: "open" });
 
+        // Instance properties.
         this.dialog;
-        this.dialogElement = addElement("div", {
-            classList: "dialog",
-            role: "dialog",
-        });
-
+        this.dialogElement = addElement("div", { classList: "dialog", role: "dialog" });
+        this.open = false;
         this.template = Object.values(this.children);
+
+        // Add styling.
         this.shadowRoot.append(addElement("style", {
             textContent: `
             * {margin:0;padding:0;box-sizing:border-box;}
@@ -53,6 +53,7 @@ class ModalDialog extends HTMLElement {
         }));
     }
 
+    /** Clear wrapper and dialog contents. */
     close = () => {
         [this.wrapper, this.dialog].forEach(e => {
             e.innerHTML = "";
@@ -67,6 +68,7 @@ class ModalDialog extends HTMLElement {
     }
 
     connectedCallback() {
+        // Apply close and hide functions to corresponding elements.
         Object.entries({
             exit: () => this.close(),
             hide: () => this.hide(),
@@ -76,6 +78,15 @@ class ModalDialog extends HTMLElement {
         });
     }
 
+    /**
+     * Display the modal dialog and fill in its contents according to the `data` argument.
+     * 
+     * `data`: Key-value pairs corresponding to elements'
+     * `data-name` attribute and their desired `innerHTML`.
+     * 
+     * `required`: Whether or not the user should be able to
+     * close this dialog by clicking the backdrop or exit button.
+     */
     display(data, required = false) {
         this.#initDisplay(required);
 
@@ -107,8 +118,11 @@ class ModalDialog extends HTMLElement {
         element.onkeydown = e => ["Enter", " "].includes(e.key) ? fn() : 0;
     }
 
-    /** Initialize the default layout and elements of the dialog. */
+    /** Initialize the default layout and elements of the dialog, then take focus. */
     #initDisplay(required) {
+        // Clear any existing dialog content.
+        if (this.open) this.close();
+
         this.wrapper = addElement("div", {
             id: "wrapper",
             style: "display: flex",
@@ -117,13 +131,14 @@ class ModalDialog extends HTMLElement {
 
         this.wrapper.appendChild(addElement("div", {
             classList: "backdrop",
-            onclick: required ? {} : () => this.close(),
+            onclick: required ? 0 : () => this.close(),
         }))
 
         this.dialog = this.wrapper.appendChild(this.dialogElement);
         this.dialog.append(...this.template);
 
         this.shadowRoot.append(this.wrapper);
+        this.open = true;
         this.wrapper.focus();
     }
 }
