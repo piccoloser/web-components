@@ -2,97 +2,63 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Tab Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Components Test</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --modal-bg-color: #222;
+            --modal-color: #ddd;
+            --modal-x-hover-color: #fff;
         }
 
         html {
-            background-color: #0d1117;
-            color: #fff;
-            font-family: sans-serif;
+            background-color: #000;
+            font-family: arial;
         }
 
-        p {
-            max-width: 48ch;
-            margin: 1rem;
+        button {
+            background: #0e8;
+            border: solid 1px #085;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #0d7;
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-    <nm-dialog id="non-modal"></nm-dialog>
-    <modal-dialog id="modal"></modal-dialog>
-    <button onclick="displayTestModal(false)">Standard Modal</button>
-    <button onclick="displayTestModal(true)">Required Modal</button>
-    <button onclick="displayTestNm()">Non-Modal</button>
+    <modal-dialog id="modal">
+        <h2 data-name="title"></h2>
+        <div data-name="body"></div>
+        <button data-name="hide" slot>Hide (sets display to "none")</button>
+        <button data-name="exit" slot>Exit (clears dialog contents)</button>
+    </modal-dialog>
 
-    <tab-menu open="Buttons">
-        <div name="Lorem Ipsum">
-            <p>This is some text.</p>
-        </div>
-        <div name="Buttons">
-            <button>Button 1</button><button>Button 2</button><button>Button 3</button>
-        </div>
-        <div name="Picture" disabled>
-            <img src="https://images.pexels.com/photos/2653362/pexels-photo-2653362.jpeg" width="100%"
-                alt="A computer screen displaying CSS code.">
-        </div>
-    </tab-menu>
-
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
-        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
-        expedita laudantium.</p>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
-        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
-        expedita laudantium.</p>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
-        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
-        expedita laudantium.</p>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
-        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
-        expedita laudantium.</p>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
-        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
-        expedita laudantium.</p>
-    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Animi corrupti id necessitatibus. Cupiditate facilis
-        illum necessitatibus possimus, veritatis odit molestias, beatae sapiente a eaque, dolorum architecto tempora aut
-        expedita laudantium.</p>
+    <button onclick="displayDialog()">Display Dialog</button>
+    <button onclick="showDialog()">Show Dialog</button>
+    <button onclick="closeDialog()">Close Dialog</button>
 
     <script type="module" src="./dialog.js"></script>
-    <script type="module" src="./tabmenu.js"></script>
     <script>
-        function displayTestModal(required) {
-            let modal = document.getElementById("modal");
-
-            switch (required) {
-                case true:
-                    modal.display(
-                        "Required",
-                        "<p>You can only close this dialog by clicking <button id='close'>here!</button></p>",
-                        true
-                    );
-                    break;
-
-                default:
-                    modal.display(
-                        "Not Required",
-                        "<p>This dialog can be dismissed by clicking anywhere outside it or the 'X' button!</p>",
-                    )
-            }
+        function displayDialog() {
+            document.getElementById("modal").display({
+                "title": "Test",
+                "body": "This is a test!",
+            });
         }
 
-        function displayTestNm() {
-            let nm = document.getElementById("non-modal");
-            nm.display(
-                "This dialog can be closed by clicking the 'X' button, but it\
-                will eventually go away on its own.", 5
-            )
+        function showDialog() {
+            document.getElementById("modal").show();
         }
+
+        function closeDialog() {
+            document.getElementById("modal").close();
+        }
+
+        window.onload = () => displayDialog();
     </script>
 </body>
 

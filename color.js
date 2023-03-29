@@ -1,14 +1,18 @@
 export class Color {
+    #_rgba = "";
     constructor(r, g, b, a) {
         [this.r, this.g, this.b, this.a] = [r, g, b, a];
     }
 
     get rgba() {
-        return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`
+        if (!this.#_rgba)
+            this.#_rgba = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
+
+        return this.#_rgba;
     }
 
     get rgbArray() {
-        return Array.from("rgb").map(k => this[k]);
+        return [this.r, this.g, this.b];
     }
 
     brightness(amount) {
@@ -23,10 +27,7 @@ export class Color {
         return this;
     }
 
-    static fromComputedStyle(element, alt = null, property = "background") {
-        let value = getComputedStyle(element)[property];
-        if (value == "none") value = alt;
-
+    static parseRGBA(value) {
         const regex = /[\d\.]+/g;
         const match = value.match(regex);
 
@@ -34,5 +35,16 @@ export class Color {
         if (!a) a = 1;
 
         return new Color(r, g, b, a);
+    }
+
+    static fromComputedStyle(element, alt = null, property = "background") {
+        let value = getComputedStyle(element)[property];
+        if (value == "none") value = alt;
+
+        return this.parseRGBA(value);
+    }
+
+    static fromRGBA(value) {
+        return this.parseRGBA(value);
     }
 }
