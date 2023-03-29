@@ -7,7 +7,7 @@ This is a lightweight, pure JavaScript web component library focused on providin
 Include the following line in your `index.html` file:
 
 ```html
-    <script type="module" src="https://cdn.jsdelivr.net/gh/piccoloser/web-components@v0.3.1/minified/main.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/piccoloser/web-components@v0.3.1/minified/main.js"></script>
 ```
 
 # Included Components
@@ -17,11 +17,11 @@ A web component that creates a tab-based menu.
 
 ### Usage
 ```html
-    <tab-menu>
-        <div name="Tab 1">Tab 1 content</div>
-        <div name="Tab 2">Tab 2 content</div>
-        <div name="Tab 3" disabled>This tab cannot be opened.</div>
-    </tab-menu>
+<tab-menu>
+    <div name="Tab 1">Tab 1 content</div>
+    <div name="Tab 2">Tab 2 content</div>
+    <div name="Tab 3" disabled>This tab cannot be opened.</div>
+</tab-menu>
 ```
 
 #### Attributes
@@ -34,13 +34,13 @@ A web component that creates a modal dialog.
 
 ### Usage
 ```html
-    <modal-dialog>
-        <h2 data-name="title"></h2>
-        <div data-name="body"></div>
-        <div class="my-public-class" slot>
-            <p>This div can be styled by the light DOM because "slot" was specified.</p>
-        </div>
-    </modal-dialog>
+<modal-dialog>
+    <h2 data-name="title"></h2>
+    <div data-name="body"></div>
+    <div class="my-public-class" slot>
+        <p>This div can be styled by the light DOM because "slot" was specified.<p>
+    </div>
+</modal-dialog>
 ```
 
 #### Methods
@@ -54,7 +54,7 @@ A web component that creates a non-modal dialog.
 
 ### Usage
 ```html
-    <nm-dialog></nm-dialog>
+<nm-dialog></nm-dialog>
 ```
 
 #### Methods
