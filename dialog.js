@@ -9,7 +9,9 @@ class ModalDialog extends HTMLElement {
         this.dialog;
         this.dialogElement = addElement("div", { classList: "dialog", role: "dialog" });
         this.open = false;
-        this.template = Object.values(this.children);
+        this.template = Object.values(this.children)
+            .map(e => e.hasAttribute("slot") ? addElement("slot") : e);
+
 
         // Add styling.
         this.shadowRoot.append(addElement("style", {

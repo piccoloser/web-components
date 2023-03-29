@@ -5,9 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Components Test</title>
     <style>
+        :root {
+            --modal-bg-color: #222;
+            --modal-color: #ddd;
+            --modal-x-hover-color: #fff;
+        }
+
         html {
             background-color: #000;
             font-family: arial;
+        }
+
+        button {
+            background: #0e8;
+            border: solid 1px #085;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #0d7;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -16,8 +33,8 @@
     <modal-dialog id="modal">
         <h2 data-name="title"></h2>
         <div data-name="body"></div>
-        <button data-name="hide">Hide (sets display to "none").</button>
-        <button data-name="exit">Exit (clears dialog contents).</button>
+        <button data-name="hide" slot>Hide (sets display to "none")</button>
+        <button data-name="exit" slot>Exit (clears dialog contents)</button>
     </modal-dialog>
 
     <button onclick="displayDialog()">Display Dialog</button>
