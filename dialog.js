@@ -1,5 +1,21 @@
 import { addElement } from "./helpers.js";
 
+const dialogExitStyle = `
+    .dialog-exit {
+        position:absolute;top:1rem; right:1rem;
+        display:flex;justify-content:center;
+        width:1.5rem;height:1.5rem;cursor:pointer;
+        --color: #000;
+    }
+    .dialog-exit:hover { --color: #222; }
+    .dialog-exit::before, .dialog-exit::after {
+        content:'';position:absolute;top:-.2rem;transform:rotate(45deg);
+        width:5px;height:2rem;border-radius:5px;
+        background:var(--color);
+    }
+    .dialog-exit::after { transform:rotate(-45deg); }
+`;
+
 class ModalDialog extends HTMLElement {
     constructor() {
         super();
@@ -32,19 +48,9 @@ class ModalDialog extends HTMLElement {
 
             .content {display:flex;flex-direction:column;gap:.5rem;}
 
-            .dialog-exit {
-                position:absolute;top:1rem; right:1rem;
-                display:flex;justify-content:center;
-                width:1.5rem;height:1.5rem;cursor:pointer;
-                --color:var(--modal-x-color, var(--modal-color, #000));
-            }
+            ${dialogExitStyle}
+            .dialog-exit { --color:var(--modal-x-color, currentColor); }
             .dialog-exit:hover { --color:var(--modal-x-hover-color, #222); }
-            .dialog-exit::before, .dialog-exit::after {
-                content:'';position:absolute;top:-.2rem;transform:rotate(45deg);
-                width:5px;height:2rem;border-radius:5px;
-                background:var(--color);
-            }
-            .dialog-exit::after { transform:rotate(-45deg); }
 
             #wrapper {
                 position:fixed;top:0;bottom:0;left:0;right:0;
@@ -144,4 +150,93 @@ class ModalDialog extends HTMLElement {
     }
 }
 
+class NonModalDialog extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: "open" });
+
+        this.wrapper = addElement("div", { classList: "wrapper" });
+
+        const style = addElement("style", {
+            textContent: `
+                * { box-sizing: border-box; }
+                
+                .content {
+                    position: absolute;top: 0;left: 50%;
+                    transform: translateX(-50%);overflow: hidden;
+                    display: flex;flex-direction: column;align-items: center;
+                    padding: 1rem;padding-right: 3rem;margin: .5rem;
+                    width: 50%;max-width: 80vw;
+                    background-color: var(--nm-bg-color, #ddd);
+                    box-shadow: 0 0 4px #000;
+                    border-radius: 5px;
+                    --bg: #222;
+                }
+
+                .wrapper {
+                    display: none;z-index: 3;
+                    justify-content: center;
+                    width: 100%;
+                    color: var(--nm-color, #000);
+                }
+
+                .wrapper.top {
+                    position: fixed;top: 0;left: 50%;
+                    transform: translateX(-50%);
+                }
+
+                ${dialogExitStyle}
+                .dialog-exit {
+                    top: 25%;
+                    --color: var(--nm-x-color, currentColor);
+                }
+                .dialog-exit:hover { --color: var(--nm-x-hover-color, #222); }
+
+                @keyframes modal-lifetime {
+                    from {width: 100%;}
+                    to {width: 0;}
+                }
+            `,
+        });
+
+        this.wrapper.classList.add("top");
+        this.shadowRoot.append(style, this.wrapper);
+    }
+
+    display(message, timeout = 10) {
+        let content = this.wrapper.appendChild(addElement("div", { classList: "content" }));
+
+        content.appendChild(addElement("div", {
+            classList: "content-body",
+            textContent: message,
+        }));
+
+        content.appendChild(addElement("div", {
+            classList: "dialog-exit",
+            onclick: () => this.close(),
+        }));
+
+        content.appendChild(addElement("div", {
+            style: `
+                position: absolute;
+                bottom: 0;left: 0;
+                height: 4px;width: 100%;
+                background: var(--nm-bar-color, #aaa); 
+                animation: modal-lifetime ${timeout}s linear;
+            `
+        }));
+
+        this.wrapper.style.display = "flex";
+
+        if (timeout > 0)
+            setTimeout(() => this.close(), timeout * 1000);
+    }
+
+    close() {
+        this.wrapper.innerHTML = "";
+        this.wrapper.display = "none";
+    }
+}
+
 customElements.define("modal-dialog", ModalDialog);
+customElements.define("nm-dialog", NonModalDialog);
