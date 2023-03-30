@@ -5,32 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Components Test</title>
     <style>
-        :root {
-            --nm-bg-color: #222;
-            --nm-color: #fff;
-            --nm-x-color: #08f;
-            --nm-x-hover-color: #2af;
-            --nm-bar-color: #08f;
-
-            --modal-bg-color: #222;
-            --modal-color: #eee;
-        }
-
         html {
             background-color: #222;
             color: #fff;
             font-family: sans-serif;
-        }
-
-        button {
-            background: #08f;
-            border: solid 1px #2ae;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background: #19e;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -40,7 +18,7 @@
         <h2 data-name="title"></h2>
         <div data-name="body"></div>
         <button data-name="hide">Hide (sets display to "none")</button>
-        <button data-name="exit" slot>Exit (clears dialog contents)</button>
+        <button data-name="exit">Exit (clears dialog contents)</button>
     </modal-dialog>
 
     <nm-dialog id="nm"></nm-dialog>
@@ -50,7 +28,14 @@
     <button onclick="showModal()">Show Modal</button>
     <button onclick="closeModal()">Close Modal</button>
 
+    <tab-menu>
+        <div name="Tab 1">Contents of Tab 1</div>
+        <div name="Tab 2">Contents of Tab 2</div>
+        <div name="Tab 3">Contents of Tab 3</div>
+    </tab-menu>
+
     <script type="module" src="./dialog.js"></script>
+    <script type="module" src="./tabmenu.js"></script>
     <script>
         function displayModal() {
             document.getElementById("modal").display({
@@ -60,7 +45,7 @@
         }
 
         function displayNm() {
-            document.getElementById("nm").display("This is a test!");
+            document.getElementById("nm").display("This is a test!", 0);
         }
 
         function showModal() {
