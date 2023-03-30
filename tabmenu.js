@@ -3,93 +3,74 @@ import { addElement } from "./helpers.js";
 class TabMenu extends HTMLElement {
     constructor() {
         super();
-
         this.attachShadow({ mode: "open" });
-        this.wrapper = addElement("div", { id: "wrapper" });
-        this.header = addElement("header", { id: "tabs" });
-        this.open = !this.hasAttribute("closed");
+
         this.divs = [];
-
-        [this.backgroundColor, this.inactiveBackgroundColor] = this.#parseBackgroundColor();
-        this.color = this.style.color;
-
-        this.wrapper.appendChild(this.header);
-    }
-
-    connectedCallback() {
-        // Add styling.
+        this.wrapper = addElement("div", { classList: "wrapper" });
+        this.header = addElement("header", { classList: "tabs" });
         const style = addElement("style", {
             textContent: `
-                a[id^="tab-"] {
-                    padding: .25rem .5rem;
-                    border-radius: 3px 3px 0 0;
-                    background-color: ${this.inactiveBackgroundColor};
-                    color: ${this.color};
-                    cursor: pointer;
-                    user-select: none;
+                a[class^="tab-"] {
+                    padding: .25rem .5rem;border-radius: 3px 3px 0 0;
+                    background-color: var(--tab-inactive-bg-color, #999);
+                    color: var(--tab-inactive-color, currentColor);
+                    cursor: pointer;user-select: none;
                 }
 
-                a[id^="tab-"]:hover {
-                    background-color: ${this.backgroundColor};
+                a[class^="tab-"]:hover {
+                    background-color: var(--tab-menu-bg-color, #ccc);
+                    color: var(--tab-color, currentColor);
                 }
 
-                a[id^="tab-"].open {
-                    background-color: ${this.backgroundColor};
+                a[class^="tab-"].open {
+                    background-color: var(--tab-menu-bg-color, #ccc);
+                    color: var(--tab-color, currentColor);
                 }
 
-                #tabs {
-                    display: flex;
-                    gap: .25rem;
-                    padding: 0 .25rem;
-                    border-bottom: solid 1px ${this.backgroundColor};
-                    color: ${this.color};
+                .tabs {
+                    display: flex;gap: .25rem;padding: 0 .25rem;
+                    border-bottom: solid 1px var(--tab-menu-bg-color, #ccc);
+                    color: var(--tab-color, currentColor);
                 }
 
-                #tabs.minimized {
-                    border-bottom: solid 1px ${this.inactiveBackgroundColor};
+                .tabs.minimized {
+                    border-bottom: solid 1px var(--tab-inactive-bg-color, #999);
                 }
 
-                #wrapper {
-                    display: flex;
-                    flex-direction: column;
+                .wrapper {
+                    display: flex;flex-direction: column;
                     margin: 1rem 0;
                 }
 
-                #wrapper>div:not(:first-child) {
+                .wrapper>div:not(:first-child) {
                     display: none;
-                    padding: 1rem;
-                    box-sizing: border-box;
-                    background-color: ${this.backgroundColor};
-                    color: ${this.color};
+                    padding: 1rem;box-sizing: border-box;
+                    background-color: var(--tab-menu-bg-color, #ccc);
+                    color: var(--tab-color, currentColor);
                 }
-
-                #wrapper>div:not(:first-child).open {
-                    display: block
-                }
-
-                #wrapper .disabled {
-                    opacity: .25;
-                    cursor: not-allowed;
-                }
+                .wrapper>div:not(:first-child).open { display: block; }
+                .wrapper .disabled { opacity: .25; cursor: not-allowed; }
             `,
         });
 
+        this.wrapper.appendChild(this.header);
+        this.shadowRoot.append(style, this.wrapper);
+    }
+
+    connectedCallback() {
         // Add tabs to header.
-        Object.entries(this.children).forEach(([n, div]) => {
+        Object.entries(this.children).forEach(item => {
+            let [n, div] = item;
             let tab = addElement("a", {
-                id: `tab-${n}`,
-
-                textContent: `${this.hasAttribute("numbered") ?
-                    `${n}: ` : ""}${div.getAttribute("name")}`,
-
+                classList: `tab-${n}`,
+                textContent: this.tabName(item),
                 onclick: () => div.hasAttribute("disabled") ?
-                    {} : div.classList.contains("open") ?
+                    0 : div.classList.contains("open") ?
                         this.minimize() : this.openTab(n),
             });
 
             // Handle disabled tabs.
-            if (div.hasAttribute("disabled"))
-                tab.classList.add("disabled");
+            if (div.hasAttribute("disabled")) tab.classList.add("disabled");
 
             this.header.appendChild(tab);
             this.wrapper.appendChild(div);
@@ -97,25 +78,17 @@ class TabMenu extends HTMLElement {
         });
 
         // Set default tab.
-        if (this.open)
-            this.openTab(this.getTab(this.getAttribute("open")));
-
-        this.shadowRoot.append(style, this.wrapper);
+        if (!this.hasAttribute("closed"))
+            this.openTab(this.tabIndex(this.getAttribute("open")));
     }
 
     /** Returns the index of a tab given its name attribute. */
-    getTab(name) {
-        if (!name) return 0;
-        return this.divs.findIndex(([_, div]) => div.getAttribute("name") == name);
-    }
+    tabIndex = name => name ? this.divs.findIndex(([_, div]) => div.getAttribute("name") == name) : 0;
 
     /** Minimize the tab menu to show only the header. */
     minimize() {
         this.header.classList.add("minimized");
-        this.divs.forEach(([tab, div]) => {
-            tab.classList.remove("open");
-            div.classList.remove("open");
-        });
+        this.divs.forEach(item => item.map(i => i.classList.remove("open")));
     }
 
     /** Open a tab given its index. */
@@ -134,23 +107,16 @@ class TabMenu extends HTMLElement {
         });
     }
 
-    /** Handle the user-defined or default background color. */
-    #parseBackgroundColor() {
-        const DEFAULT_BG_COLOR = "rgba(200, 200, 200, 1)";
+    tabName(tabDetails) {
+        let [index, tab] = tabDetails;
+        let sep = this.getAttribute("sep") || ": ";
 
-        // Match numbers within the instance's background color or the default.
-        const regex = /[\d\.]+/g
-        const match = this.style.backgroundColor.match(regex) || DEFAULT_BG_COLOR.match(regex);
+        index = parseInt(index);
 
-        // Separate RGB and alpha values.
-        const bgColorParts = match ? match.map(Number) : DEFAULT_BG_COLOR;
-        const alpha = bgColorParts.length > 3 ? bgColorParts.pop() : 1;
+        if (this.hasAttribute("numbered")) index += 1;
+        else index = sep = "";
 
-        // Create background color and inactive background color.
-        const bgColor = `rgba(${bgColorParts.join(", ")}, ${alpha})`;
-        const inactiveBgColor = `rgba(${bgColorParts.join(", ")}, ${Math.max(0, alpha - 0.2)})`;
-
-        return [bgColor, inactiveBgColor];
+        return `${index}${sep}${tab.getAttribute("name")}`;
     }
 }
 
